@@ -32,7 +32,7 @@ namespace DataAccessLayer.Repository
 
         public void Update(Cat item)
         {
-            _catsContext.Cats.Update(item);
+            var cat = _catsContext.Cats.Update(item);
         }
 
         public void Delete(int id)

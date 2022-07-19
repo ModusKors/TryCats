@@ -6,7 +6,6 @@ using BusinessLogicLayer.Service;
 using DataAccessLayer;
 using DataAccessLayer.Finder;
 using DataAccessLayer.Repository;
-using DataAccessLayer.Service;
 using Microsoft.EntityFrameworkCore;
 
 namespace TryCats6
@@ -26,8 +25,6 @@ namespace TryCats6
             builder.Services.AddScoped<IRepository<Cat>, CatRepository>();
             builder.Services.AddScoped<ICatFinder, CatFinder>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            builder.Services.AddScoped<ICatService, CatService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

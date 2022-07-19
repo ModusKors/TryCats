@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BusinessLogicLayer.Entity;
-using BusinessLogicLayer.Finder;
-using BusinessLogicLayer.Repository;
 
 namespace BusinessLogicLayer.Service
 {
-    public interface ICatService
+    public interface IService<T>
     {
-        IRepository<Cat> Cats { get; }
-        ICatFinder CatsFinder { get; }
-        IUnitOfWork UnitOfWork { get; }
+        Task<List<T>> Get();
+        Task<int> Count();
+        public Task<T> Get(int id);
+        Task<T> Get(string name);
+        Task Post(T item);
+        Task<bool> Put(T item);
+        Task<bool> Delete(int id);
     }
 }

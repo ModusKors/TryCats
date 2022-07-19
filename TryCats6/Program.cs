@@ -1,6 +1,10 @@
-﻿using BusinessLogicLayer.Repository;
+﻿using BusinessLogicLayer;
+using BusinessLogicLayer.Entity;
+using BusinessLogicLayer.Finder;
+using BusinessLogicLayer.Repository;
 using BusinessLogicLayer.Service;
 using DataAccessLayer;
+using DataAccessLayer.Finder;
 using DataAccessLayer.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +21,10 @@ namespace TryCats6
             string con = "Data Source=Cats.db";
             // устанавливаем контекст данных
             builder.Services.AddDbContext<CatsContext>(options => options.UseSqlite(con));
-            builder.Services.AddScoped<CatService, UnitOfWork>();
+
+            builder.Services.AddScoped<IRepository<Cat>, CatRepository>();
+            builder.Services.AddScoped<ICatFinder, CatFinder>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

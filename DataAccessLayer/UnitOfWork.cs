@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessLogicLayer;
 using BusinessLogicLayer.Entity;
 using BusinessLogicLayer.Finder;
 using BusinessLogicLayer.Repository;
@@ -12,7 +13,7 @@ using DataAccessLayer.Repository;
 
 namespace DataAccessLayer
 {
-    public class UnitOfWork : CatService
+    public class UnitOfWork : IUnitOfWork
     {
         private CatsContext _catsContext;
 

@@ -9,10 +9,10 @@ using BusinessLogicLayer.Repository;
 
 namespace BusinessLogicLayer.Service
 {
-    public interface CatService
+    public interface ICatService
     {
-        IRepository<Cat> Cats { get; }
-        ICatFinder CatsFinder { get; }
-        Task<int> Commit();
+        IRepository<Cat> iRepository { get; }
+        ICatFinder iCatFinder { get; }
+        IUnitOfWork iUnitOfWork { get; }
     }
 }

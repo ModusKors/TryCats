@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessLogicLayer.Entity;
+using BusinessLogicLayer.Finder;
+using BusinessLogicLayer.Repository;
+using BusinessLogicLayer.Service;
 using DataAccessLayer.Finder;
 using DataAccessLayer.Repository;
 
 namespace DataAccessLayer
 {
-    public class UnitOfWork
+    public class UnitOfWork : CatService
     {
         private CatsContext _catsContext;
 
@@ -20,7 +24,7 @@ namespace DataAccessLayer
             _catsContext = catsContext;
         }
 
-        public CatRepository Cats
+        public IRepository<Cat> Cats
         {
             get
             {
@@ -30,7 +34,7 @@ namespace DataAccessLayer
             }
         }
 
-        public CatFinder CatsFinder
+        public ICatFinder CatsFinder
         {
             get
             {

@@ -14,32 +14,32 @@ namespace TryCats6.Controllers
     {
         private readonly ILogger<CatsController> _logger;
 
-        private IUnitOfWork _unitOfWork;
+        private ICatService _catService;
 
-        public CatsController(ILogger<CatsController> logger, IUnitOfWork unitOfWork)
+        public CatsController(ILogger<CatsController> logger, ICatService catService)
         {
             _logger = logger;
-            _unitOfWork = unitOfWork;
+            _catService = catService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cat>>> Get()
         {
-            var cats = await _unitOfWork.Cats.GetAll();
-            return await _unitOfWork.CatsFinder.Count() !=0 ? new ActionResult<IEnumerable<Cat>>(cats) : NotFound();
+            var cats = await _catService.Cats.GetAll();
+            return await _catService.CatsFinder.Count() !=0 ? new ActionResult<IEnumerable<Cat>>(cats) : NotFound();
         }
 
         [HttpGet("{name}")]
         public async Task<ActionResult<Cat>> Get(string name)
         {
-            var getCat = await _unitOfWork.CatsFinder.FindByName(name);
+            var getCat = await _catService.CatsFinder.FindByName(name);
             return (getCat != null ? new ObjectResult(getCat) : NotFound());
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Cat>> Get(int id)
         {
-            var getCat = await _unitOfWork.Cats.Get(id);
+            var getCat = await _catService.Cats.Get(id);
             return getCat != null ? new ObjectResult(getCat) : NotFound();
         }
 
@@ -52,8 +52,8 @@ namespace TryCats6.Controllers
             }
             else
             {
-                _unitOfWork.Cats.Create(cat);
-                await _unitOfWork.Commit();
+                _catService.Cats.Create(cat);
+                await _catService.UnitOfWork.Commit();
                 return Ok(cat);
             }
         }
@@ -66,11 +66,11 @@ namespace TryCats6.Controllers
                 return BadRequest();
             }
 
-            var getCat = await _unitOfWork.Cats.Get(cat.Id);
+            var getCat = await _catService.Cats.Get(cat.Id);
             if (getCat != null)
             {
-                _unitOfWork.Cats.Update(cat);
-                await _unitOfWork.Commit();
+                _catService.Cats.Update(cat);
+                await _catService.UnitOfWork.Commit();
                 return Ok(cat);
             }
             else
@@ -82,15 +82,15 @@ namespace TryCats6.Controllers
         [HttpDelete("{id}")]
         public async Task <ActionResult<Cat>> Delete(int id)
         {
-            Cat cat = await _unitOfWork.Cats.Get(id);
+            Cat cat = await _catService.Cats.Get(id);
             if (cat == null)
             {
                 return NotFound();
             }
             else
             {
-                _unitOfWork.Cats.Delete(id);
-                await _unitOfWork.Commit();
+                _catService.Cats.Delete(id);
+                await _catService.UnitOfWork.Commit();
                 return Ok(cat);
             }
         }

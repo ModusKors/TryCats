@@ -6,8 +6,6 @@ namespace BusinessLogicLayer
 {
     public interface IUnitOfWork
     {
-        IRepository<Cat> Cats { get; }
-        ICatFinder CatsFinder { get; }
         Task<int> Commit();
     }
 }

@@ -8,20 +8,52 @@ using BusinessLogicLayer.Entity;
 using BusinessLogicLayer.Finder;
 using BusinessLogicLayer.Repository;
 using BusinessLogicLayer.Service;
+using DataAccessLayer.Finder;
+using DataAccessLayer.Repository;
 
 namespace DataAccessLayer.Service
 {
     public class CatService : ICatService
     {
-        public IRepository<Cat> iRepository { get; }
-        public ICatFinder iCatFinder { get; }
-        public IUnitOfWork iUnitOfWork { get; }
+        private CatsContext _catsContext;
 
-        public CatService(IRepository<Cat> iRepository, ICatFinder iCatFinder, IUnitOfWork iUnitOfWork)
+        private IRepository<Cat> _catRepository;
+        private ICatFinder _catFinder;
+        private IUnitOfWork _unitOfWork;
+
+        public CatService(CatsContext catsContext)
         {
-            this.iRepository=iRepository;
-            this.iCatFinder=iCatFinder;
-            this.iUnitOfWork=iUnitOfWork;
+            _catsContext = catsContext;
+        }
+
+        public IRepository<Cat> Cats
+        {
+            get
+            {
+                if (_catRepository == null)
+                    _catRepository = new CatRepository(_catsContext);
+                return _catRepository;
+            }
+        }
+
+        public ICatFinder CatsFinder
+        {
+            get
+            {
+                if (_catFinder == null)
+                    _catFinder = new CatFinder(_catsContext);
+                return _catFinder;
+            }
+        }
+
+        public IUnitOfWork UnitOfWork
+        {
+            get
+            {
+                if (_unitOfWork == null)
+                    _unitOfWork = new UnitOfWork(_catsContext);
+                return _unitOfWork;
+            }
         }
     }
 }

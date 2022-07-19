@@ -11,8 +11,8 @@ namespace BusinessLogicLayer.Service
 {
     public interface ICatService
     {
-        IRepository<Cat> iRepository { get; }
-        ICatFinder iCatFinder { get; }
-        IUnitOfWork iUnitOfWork { get; }
+        IRepository<Cat> Cats { get; }
+        ICatFinder CatsFinder { get; }
+        IUnitOfWork UnitOfWork { get; }
     }
 }

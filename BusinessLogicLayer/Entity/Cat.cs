@@ -4,7 +4,7 @@ namespace BusinessLogicLayer.Entity
 {
     public class Cat
     {
-        [Required]
+        [Key]
         public int Id { get; set; }
 
         [Required]

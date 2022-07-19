@@ -1,5 +1,6 @@
 ﻿using BusinessLogicLayer.Entity;
 using BusinessLogicLayer.Repository;
+using DataAccessLayer;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TryCats6.Controllers
@@ -11,33 +12,34 @@ namespace TryCats6.Controllers
     {
         private readonly ILogger<CatsController> _logger;
 
-        private readonly ICatRepository _catRepository;
+        //private readonly ICatRepository _catRepository;
 
-        public CatsController(ILogger<CatsController> logger, ICatRepository catRepository)
+        private UnitOfWork unitOfWork;
+
+        public CatsController(ILogger<CatsController> logger, CatsContext catsContext)
         {
             _logger = logger;
-            _catRepository = catRepository;
-            _catRepository.SeedData();
+            unitOfWork = new UnitOfWork(catsContext);
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cat>>> Get()
         {
-            var cats = await _catRepository.GetAll();
-            return await _catRepository.Count() !=0 ? new ActionResult<IEnumerable<Cat>>(cats) : NotFound();
+            var cats = await unitOfWork.Cats.GetAll();
+            return await unitOfWork.CatsFinder.Count() !=0 ? new ActionResult<IEnumerable<Cat>>(cats) : NotFound();
         }
 
         [HttpGet("{name}")]
-        public Task<ActionResult<Cat>> Get(string name)
+        public async Task<ActionResult<Cat>> Get(string name)
         {
-            var getCat = _catRepository.Find(x => x.Name == name);
-            return Task.FromResult<ActionResult<Cat>>(getCat != null ? new ObjectResult(getCat) : NotFound());
+            var getCat = await unitOfWork.CatsFinder.FindByName(name);
+            return (getCat != null ? new ObjectResult(getCat) : NotFound());
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Cat>> Get(int id)
         {
-            var getCat = await _catRepository.Get(id);
+            var getCat = await unitOfWork.Cats.Get(id);
             return getCat != null ? new ObjectResult(getCat) : NotFound();
         }
 
@@ -50,7 +52,8 @@ namespace TryCats6.Controllers
             }
             else
             {
-                await _catRepository.Create(cat);
+                unitOfWork.Cats.Create(cat);
+                await unitOfWork.Commit();
                 return Ok(cat);
             }
         }
@@ -63,10 +66,11 @@ namespace TryCats6.Controllers
                 return BadRequest();
             }
 
-            var getCat = await _catRepository.Get(cat.Id);
+            var getCat = await unitOfWork.Cats.Get(cat.Id);
             if (getCat != null)
             {
-                await _catRepository.Update(cat);
+                unitOfWork.Cats.Update(cat);
+                await unitOfWork.Commit();
                 return Ok(cat);
             }
             else
@@ -78,14 +82,15 @@ namespace TryCats6.Controllers
         [HttpDelete("{id}")]
         public async Task <ActionResult<Cat>> Delete(int id)
         {
-            Cat cat = await _catRepository.Get(id);
+            Cat cat = await unitOfWork.Cats.Get(id);
             if (cat == null)
             {
                 return NotFound();
             }
             else
             {
-                await _catRepository.Delete(id);
+                unitOfWork.Cats.Delete(id);
+                await unitOfWork.Commit();
                 return Ok(cat);
             }
         }

@@ -13,13 +13,13 @@ namespace TryCats6.Controllers
     [Route("[controller]")]
     public class CatsController : ControllerBase
     {
-        private readonly ILogger<CatsController> _logger;
+        //private readonly ILogger<CatsController> _logger;
 
         private CatService _catService;
 
-        public CatsController(ILogger<CatsController> logger, IRepository<Cat> iRepository, ICatFinder iCatFinder, IUnitOfWork iUnitOfWork)
+        public CatsController(IRepository<Cat> iRepository, ICatFinder iCatFinder, IUnitOfWork iUnitOfWork)
         {
-            _logger = logger;
+            //_logger = logger;
             _catService = new CatService(iRepository, iCatFinder, iUnitOfWork);
         }
 
@@ -34,17 +34,18 @@ namespace TryCats6.Controllers
         public async Task<ActionResult<Cat>> Get(int id)
         {
             var getCat = await _catService.Get(id);
-            return getCat != null ? new ObjectResult(getCat) : NotFound();
+            return getCat != null ? 
+                Ok(getCat) : 
+                NotFound();
         }
 
         [HttpGet("{name}")]
         public async Task<ActionResult<Cat>> Get(string name)
         {
             var getCat = await _catService.Get(name);
-            return (getCat != null ? new ObjectResult(getCat) : NotFound());
+            return (getCat != null ? Ok(getCat) : NotFound());
         }
-       
-
+        
         [HttpPost]
         public async Task<ActionResult<Cat>> Post(Cat cat)
         {
@@ -73,9 +74,9 @@ namespace TryCats6.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task <ActionResult<Cat>> Delete(int id)
+        public async Task <ActionResult<bool>> Delete(int id)
         {
-            return await _catService.Delete(id) ? Ok() : NotFound();
+            return await _catService.Delete(id) ? Ok(true) : NotFound(false);
         }
     }
 }

@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option csharp_namespace = "TryCatsGrpcService";
+
+package cats;
+
+service Cats {
+
+  rpc GetAllCats (GetAllCatsRequest) returns (GetAllCatsReply);
+  rpc GetCatById (GetCatByIdRequest) returns (CatReply);
+  rpc GetCatByName (GetCatByNameRequest) returns (CatReply);
+  rpc PostCat (PostCatRequest) returns (CatReply);
+  rpc PutCat (PutCatRequest) returns (CatReply);
+  rpc DeleteCat (DeleteCatRequest) returns (BoolResultReply);
+}
+
+message GetAllCatsRequest {
+}
+message GetCatByIdRequest {
+	int32 id = 1;
+}
+message GetCatByNameRequest {
+	string name = 1;
+}
+message PostCatRequest {
+	Cat cat = 1;
+}
+message PutCatRequest {
+	Cat cat = 1;
+}
+message DeleteCatRequest {
+	int32 id = 1;
+}
+
+message GetAllCatsReply {
+	repeated Cat cats = 1; 
+}
+message CatReply {
+	Cat cat  = 1;
+}
+
+message BoolResultReply
+{
+	bool result = 1;
+}
+
+message Cat {
+	int32 id = 1;
+	string name = 2;
+	string summary = 3;
+}

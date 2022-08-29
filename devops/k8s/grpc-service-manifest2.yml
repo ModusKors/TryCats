@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cats-grpc-server-deployment
+  labels: 
+    app: cats-grpc
+    env: dev
+    targetApp: trycatsgrpcservice
+spec:
+  selector:
+    matchLabels:
+      app: cats-grpc-server-container
+  template:
+    metadata:
+      labels:
+        app: cats-grpc-server-container
+    spec:
+      containers:
+        - name: cats-grpc-server-container
+          image: cats-grpc-server:1.5.0
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "4096Mi"
+              cpu: "500m"
+          env:
+            - name: DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT
+              value: "true"
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cats-grpc-server-service
+  labels: 
+    app: cats-grpc
+    env: dev
+    targetApp: trycatsgrpcservice
+spec:
+  selector:
+    app: cats-grpc-server-container    
+  ports:
+    - name: grpc-server-listener
+      protocol: TCP
+      port: 8087
+      targetPort: 80
+  type: ClusterIP

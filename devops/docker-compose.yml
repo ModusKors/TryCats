@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  trycatsgrpcservice:
+    build:
+      context: ./../
+      dockerfile: TryCatsGrpcService/Dockerfile
+    container_name: cats-grpc-service
+    env_file: .env
+    ports:
+    - 8081:80
+    - 8082:443
+    volumes:
+    - .\\ceftificates\:/https:ro
+    
+volumes:
+  api:
+    driver: local

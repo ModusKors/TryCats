@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicLayerTests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TryCats6Tests", "TryCats6Tests\TryCats6Tests.csproj", "{68851244-4344-4C48-9C6E-B07D45352330}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TryCatsGrpcService", "TryCatsGrpcService\TryCatsGrpcService.csproj", "{7E30415A-AFEB-4166-8CBD-B82D4D27AD53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TryCatsGrpcService", "TryCatsGrpcService\TryCatsGrpcService.csproj", "{7E30415A-AFEB-4166-8CBD-B82D4D27AD53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TryCatsGrpcClient", "TryCatsGrpcClient\TryCatsGrpcClient.csproj", "{13F72999-0329-4080-9094-40056738D72E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TryCatsGrpcClient", "TryCatsGrpcClient\TryCatsGrpcClient.csproj", "{13F72999-0329-4080-9094-40056738D72E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

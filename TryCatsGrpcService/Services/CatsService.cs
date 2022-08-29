@@ -3,6 +3,7 @@ using BusinessLogicLayer.Finder;
 using BusinessLogicLayer.Repository;
 using BusinessLogicLayer.Service;
 using Google.Protobuf.Collections;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic.CompilerServices;
@@ -16,14 +17,10 @@ namespace TryCatsGrpcService.Services
 {
     public class CatsService : Cats.CatsBase
     {
-        private readonly ILogger<CatsService> _logger;
-
         private CatsController _catsController;
 
-        public CatsService(ILogger<CatsService> logger, IRepository<ControllerCat> iRepository, ICatFinder iCatFinder, IUnitOfWork iUnitOfWork)
+        public CatsService(IRepository<ControllerCat> iRepository, ICatFinder iCatFinder, IUnitOfWork iUnitOfWork)
         {
-            _logger = logger;
-
             _catsController = new CatsController(iRepository, iCatFinder, iUnitOfWork);
         }
 
@@ -32,7 +29,9 @@ namespace TryCatsGrpcService.Services
         {
             ActionResult<IEnumerable<ControllerCat>> result = await _catsController.Get();
 
-            List<Cat> listCats = result.Value.Select(cat => new Cat() { Id = cat.Id, Name = cat.Name, Summary = cat.Summary, }).ToList();
+            List<Cat> listCats = (result.Value != null) ?
+                result.Value.Select(cat => new Cat() { Id = cat.Id, Name = cat.Name, Summary = cat.Summary, }).ToList()
+                : new List<Cat>();
 
             GetAllCatsReply catsReply = new GetAllCatsReply { Cats = { listCats } };
 
@@ -41,11 +40,11 @@ namespace TryCatsGrpcService.Services
 
         private T EjectFromActionResult<T>(ActionResult<T> actionResult)
         {
-            var result = (ObjectResult)actionResult.Result; // <-- Cast is before using it.
-            
+            var result = actionResult.Result as ObjectResult; // <-- Cast is before using it.
+
             //if (actionResult.Result is NotFoundObjectResult)
 
-            return (T)result.Value; //<-- Then you'll get no error here.
+            return (T)result?.Value; //<-- Then you'll get no error here.
         }
 
         //Code 2
@@ -57,7 +56,7 @@ namespace TryCatsGrpcService.Services
 
             CatReply catReply = new CatReply
             {
-               Cat = CatConverter(valueResult)
+                Cat = CatConverter(valueResult)
             };
 
             return catReply;
@@ -67,7 +66,7 @@ namespace TryCatsGrpcService.Services
         {
             if (controllerCat != null)
             {
-                Cat cat =  new Cat()
+                Cat cat = new Cat()
                 {
                     Id = controllerCat.Id,
                     Name = controllerCat.Name,
@@ -86,7 +85,7 @@ namespace TryCatsGrpcService.Services
         {
             if (cat != null)
             {
-                ControllerCat controllerCat = new ()
+                ControllerCat controllerCat = new()
                 {
                     Id = cat.Id,
                     Name = cat.Name,
@@ -97,7 +96,7 @@ namespace TryCatsGrpcService.Services
             }
             else
             {
-                return new ();
+                return new();
             }
         }
 

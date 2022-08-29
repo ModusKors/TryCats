@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-grpc-deployment
+  labels: 
+    app: sample-grpc
+    env: dev
+    targetApp: api
+spec:
+  selector:
+    matchLabels:
+      app: cats-grpc-service
+  template:
+    metadata:
+      labels:
+        app: cats-grpc-service
+    spec:
+      containers:
+        - name: cats-grpc-service
+          image: cats-grpc-service:1.5.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "4096Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 80
